@@ -1,12 +1,20 @@
-# news-summary-01: copies summary.txt (next to this file) into the make.fun
-# output directory as entry.txt. Stdlib only, deterministic, no network.
+"""Emits the news-summary-01 entry: summary.txt copied to $MAKEFUN_OUTPUT_DIR/entry.txt."""
 import os
 import shutil
 
-here = os.path.dirname(os.path.abspath(__file__))
-src = os.path.join(here, "summary.txt")
-out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+OUTPUT_ENV = "MAKEFUN_OUTPUT_DIR"
+DEFAULT_OUTPUT = "/output"
 
-os.makedirs(out_dir, exist_ok=True)
-shutil.copyfile(src, os.path.join(out_dir, "entry.txt"))
-print("wrote", os.path.join(out_dir, "entry.txt"))
+
+def main():
+    here = os.path.dirname(os.path.abspath(__file__))
+    src = os.path.join(here, "summary.txt")
+    out_dir = os.environ.get(OUTPUT_ENV, DEFAULT_OUTPUT)
+    os.makedirs(out_dir, exist_ok=True)
+    dst = os.path.join(out_dir, "entry.txt")
+    shutil.copyfile(src, dst)
+    return dst
+
+
+if __name__ == "__main__":
+    print("wrote", main())
